@@ -1,4 +1,4 @@
 # files to ignore
-
 .python-version
 .venv
+.*
