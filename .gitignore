@@ -2,3 +2,7 @@
 .python-version
 .venv
 .*
+data_imdb/name.basics.tsv.gz
+data_imdb/title.akas.tsv.gz
+data_imdb/title.basics.tsv.gz
+data_imdb/title.principals.tsv.gz
