@@ -3,13 +3,18 @@
 ## What is Movie-Recommandation project ?
 
 This project is realized in team during a MLOps training provided by [DataScientest](https://datascientest.com/).
-The main goal is to deploy a solution using MLOps techniques we learn during the training.
+The main goal is to deploy a solution using MLOps techniques we have learn.
 
-The solution consist on one API sending a list of 10 recommanded movies, based on one movie provided by the user.
+The solution provide a list of 10 recommanded movies, based on one movie provided by the user.
 Approach choosen by the team is content-based, so recommanded movies are choosen on similarites on a defined intrisec characteristic.
 Similarity between movies are computed using a cosine similarity
 
-Data are hosted in a MySQL Database, and data-processing is managed with Airflow
+## Architecture
+
+The solution is contained in a Airflow docker-compose.
+Airflow is used as a pipeline pre-processing, from download to data-base storage.
+Data are hosted in a MySQL container.
+A FastAPI container is containing cosine-similarity calculation, based on data retrieved from MySQL container.
 
 
 
