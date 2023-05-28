@@ -1,27 +1,34 @@
-# MLOPS-Movie-Recommandation
+# Projet Movie-Recommandation
 
-## What is this Movie-Recommandation project ?
-
-This project aims to provide a list of 10 recommanded movies, based on one movie.
-Approach choosen by the team is content-based, so recommanded movies are choosen on similarites on a defined intrisec characteristic.
-
-Similarity between movies are computed using a cosine similarity
-
-
-## Context
+## What is Movie-Recommandation project ?
 
 This project is realized in team during a MLOps training provided by [DataScientest](https://datascientest.com/).
+The main goal is to deploy a solution using MLOps techniques we learn during the training.
+
+The solution consist on one API sending a list of 10 recommanded movies, based on one movie provided by the user.
+Approach choosen by the team is content-based, so recommanded movies are choosen on similarites on a defined intrisec characteristic.
+Similarity between movies are computed using a cosine similarity
+
+Data are hosted in a MySQL Database, and data-processing is managed with Airflow
+
 
 
 ## Data
 
 - [https://www.imdb.com/interfaces/](https://www.imdb.com/interfaces/)
 
+For this project, and due to limited computer ressources, we used the table contained in the file title.basics.tsv.gz
+After a pre-process, we end-up
+
 Characteritics used are :
+- tconst
+- titleType
 - primaryTitle
-- YearCategory 
 - genres
 - RuntimeCategory
+- YearCategory 
+- combined-features : this field concatenante several fields, and after a tokenization step, will become the vector for cosine-similarity computation
+
 
 
 ## How to install ?
@@ -55,10 +62,10 @@ pip install -r requirements.txt
 ```
 
 
-#### Permission change on logs dir
+#### Permission changes
 
 ```
-sudo chmod -R 777 logs/
+sudo chmod -R 777 logs/ raw_data/ data_processed/
 ```
 
 #### Airflow initialisation
@@ -73,6 +80,7 @@ If everything went well, last line should display "mlops-movie-recommandation_ai
 
 #### Airflow start
 
+Start of container in a detached mode
 ```
 docker-compose up -d
 ```
@@ -88,13 +96,16 @@ ssh -i "data_enginering_machine.pem" -L 8000:localhost:8000 -L 8080:localhost:80
 
 ```
 
-
 #### Airflow Connection
 
 login: airflow
 password: airflow
 
 #### MySQL connection setup
+
+Within the Airflow interface, a connection has to be created for MySQL.
+In Admin menu, select Connection and fill fields as shown in the screen capture below.
+MySQL password is : my-secret-pw
 
 ![MySQL connection setup](./images/mysql_connection_creation.png)
 
