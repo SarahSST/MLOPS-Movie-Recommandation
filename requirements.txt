@@ -1,0 +1,9 @@
+fastapi==0.89.1  
+kubernetes==26.1.0 
+pandas==2.0.1  
+numpy==1.24.3   
+SQLAlchemy==2.0.13              
+SQLAlchemy-Utils==0.41.1 
+uvicorn==0.22.0
+mysqlclient==2.1.1
+mysql-connector-python==8.0.33
