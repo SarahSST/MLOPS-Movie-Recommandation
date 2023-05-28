@@ -1,5 +1,6 @@
 # Projet Movie-Recommandation
 
+
 ## What is Movie-Recommandation project ?
 
 This project is realized in team during a MLOps training provided by [DataScientest](https://datascientest.com/).
@@ -9,6 +10,7 @@ The solution provide a list of 10 recommanded movies, based on one movie provide
 Approach choosen by the team is content-based, so recommanded movies are choosen on similarites on a defined intrisec characteristic.
 Similarity between movies are computed using a cosine similarity
 
+
 ## Architecture
 
 The solution is contained in a Airflow docker-compose.
@@ -17,16 +19,14 @@ Data are hosted in a MySQL container.
 A FastAPI container is containing cosine-similarity calculation, based on data retrieved from MySQL container.
 
 
-
 ## Data
 
 - [https://www.imdb.com/interfaces/](https://www.imdb.com/interfaces/)
 
 For this project, and due to limited computer ressources, we used the table contained in the file title.basics.tsv.gz
-After a pre-process, we end-up
 
-Characteritics used are :
-- tconst
+Our final table used for recommandation is the one below :
+- tconst : movie id from IMDB
 - titleType
 - primaryTitle
 - genres
