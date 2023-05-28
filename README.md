@@ -44,7 +44,7 @@ Our final table used for recommandation is the one below :
 git clone git@github.com:SarahSST/MLOPS-Movie-Recommandation.git
 ```
 
-#### Additionnal Linux packages
+#### Linux packages
 
 SQLAlchemy python package requires  mysqlclient and  mysql-connector-python packages, but both packages requires to be built, and requires some additionnales packages to be installed on linux
 
@@ -61,7 +61,10 @@ sudo apt install libmysqlclient-dev
 sudo apt install mysql-client-core-8.0
 ```
 
-#### Additionnal Python Packages
+#### Python Packages
+
+Python version used for this project is : 3.8.10
+
 ``` bash
 pip install -r requirements.txt
 ```
