@@ -1,11 +1,15 @@
 
 # ---------- Imports ---------- #
 
-from fastapi import FastAPI 
+from fastapi import FastAPI, status, Header, Response, HTTPException, Depends, Security
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.responses import JSONResponse
 import os
+
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from passlib.context import CryptContext
+from fastapi.security.api_key import APIKeyHeader, APIKey
 
 import pandas as pd
 import zipfile as zipfile
@@ -82,7 +86,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.4.2",
+    version="1.4.3",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
