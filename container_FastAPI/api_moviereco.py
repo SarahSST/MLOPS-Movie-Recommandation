@@ -82,7 +82,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.4.1",
+    version="1.4.2",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
