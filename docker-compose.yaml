@@ -95,7 +95,7 @@ services:
     restart: always
 
   container_api:
-    image: cedric1234/api_moviereco:1.2.4
+    image: cedric1234/api_moviereco:1.2.5
     container_name: container_api
     depends_on:
       container_mysql:
