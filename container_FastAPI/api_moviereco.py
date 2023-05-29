@@ -82,7 +82,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.4.0",
+    version="1.4.1",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -241,7 +241,7 @@ async def list_films(number:int):
 
 
 @api.get('/get-tables', name="Send a list of existing tables" , tags=['Admin'])
-async def get_tables():
+async def get_tables(api_key_header: APIKey = Depends(get_api_key) ):
     """ 
     Send a list of existing tables in MySQL
     """
@@ -250,7 +250,7 @@ async def get_tables():
 
 
 @api.get('/get-columns-info/{TableName:str}', name="Send a list of existing columns" , tags=['Admin'])
-async def get_columns(TableName:str):
+async def get_columns(TableName:str), api_key_header: APIKey = Depends(get_api_key) :
     """ 
     Send a list of existing columns in a given table name
     """
