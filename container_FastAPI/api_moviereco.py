@@ -79,7 +79,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.2.3",
+    version="1.2.4",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -106,7 +106,7 @@ async def get_users():
         User(
             user_id=i[0],
             username=i[1],
-            password=i[2]
+            password=i[2],
             email=i[3]
             ) for i in results.fetchall()]
     return results
