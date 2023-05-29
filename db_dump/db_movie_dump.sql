@@ -37,7 +37,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'Daniel','daniel@mail.com','Daniel'),(2,'Dominique','dominique@mail.com','Dominique'),(3,'Diane','daisy@mail.com','Diane');
+INSERT INTO `Users` VALUES (1,'Daniel','Daniel','daniel@mail.com'),(2,'Dominique','Dominique','dominique@mail.com'),(3,'Diane','Diane','daisy@mail.com');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
