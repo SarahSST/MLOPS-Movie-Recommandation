@@ -26,7 +26,7 @@ mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 database_name = os.environ.get('MYSQL_DATABASE')
 table_users = os.environ.get('MYSQL_TABLE_USERS')
 table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
-
+api_logs =  os.environ.get('API_LOGS')
 
 # ---------- Function definition ---------- #
 
@@ -53,7 +53,7 @@ inspector = inspect(mysql_engine)
 # ---------- Load data for recommendation ---------- #
 
 # Load data from MySQL
-stmt = 'SELECT tconst, combined_features FROM {table}'.format(table=table_movies)
+stmt = 'SELECT tconst, combined_features FROM {table} WHERE startYear > 2000'.format(table=table_movies)
 #stmt = text('SELECT tconst, combined_features FROM {table}').format(table=table_movies)
 df = pd.read_sql(text(stmt), conn)
 
@@ -83,7 +83,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.3.0",
+    version="1.3.2",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
