@@ -24,7 +24,7 @@ mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 #database_name = os.environ.get('MYSQL_DATABASE')
-database_name = 'table_api'
+database_name = 'db_movie'
 
 
 
