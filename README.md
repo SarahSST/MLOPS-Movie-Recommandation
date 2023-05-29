@@ -73,7 +73,7 @@ pip install -r requirements.txt
 #### Permission changes
 
 ```
-sudo chmod -R 777 logs/ raw_data/ data_processed/
+sudo chmod -R 777 logs/ raw_data/ data_processed/ db_dump/
 ```
 
 #### Airflow initialisation
