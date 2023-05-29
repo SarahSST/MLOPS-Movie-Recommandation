@@ -119,10 +119,11 @@ async def get_users():
     return results
 
 
-@api.get('/list-genres/{tconst:str}', name="Return a list of existing genres" , response_model=Movie, tags=['Info'])
+
+@api.get('/get-film-info/{tconst:str}', name="Return information on a film" , response_model=Movie, tags=['Info'])
 async def list_genres(tconst):
     """ 
-    Return the list of existing genres
+    Return information on a film
     """
 
     stmt = 'SELECT * FROM {table} WHERE tconst = {tconst};'.format(table=table_movies, tconst=tconst)
@@ -135,7 +136,7 @@ async def list_genres(tconst):
             index=i[0],
             tconst=i[1],
             titleType=i[2],
-            primaryTitle=i[2],
+            primaryTitle=i[3],
             startYear=i[4],
             runtimeMinutes=i[5],
             genres=i[6],
@@ -150,7 +151,6 @@ async def list_genres(tconst):
             detail='Unknown movie')
     else:
         return results[0]
-
 
 
 @api.get('/get_recommendation/{movie_user_title:str}', name="Return a list of similar movies" , tags=['MovieReco'])
@@ -206,7 +206,7 @@ async def list_films(number:int):
             index=i[0],
             tconst=i[1],
             titleType=i[2],
-            primaryTitle=i[2],
+            primaryTitle=i[3],
             startYear=i[4],
             runtimeMinutes=i[5],
             genres=i[6],
