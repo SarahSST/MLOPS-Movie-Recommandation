@@ -250,7 +250,7 @@ async def get_tables(api_key_header: APIKey = Depends(get_api_key) ):
 
 
 @api.get('/get-columns-info/{TableName:str}', name="Send a list of existing columns" , tags=['Admin'])
-async def get_columns(TableName:str), api_key_header: APIKey = Depends(get_api_key) :
+async def get_columns(TableName:str, api_key_header: APIKey = Depends(get_api_key)) :
     """ 
     Send a list of existing columns in a given table name
     """
