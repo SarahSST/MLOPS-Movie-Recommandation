@@ -79,7 +79,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.2.5",
+    version="1.2.4",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -192,14 +192,13 @@ async def list_films(number:int):
 
     results = [
         Movie(
-            index=i[0],
-            tconst=i[1],
-            primaryTitle=i[2],
-            titleType=i[3],
-            genres=i[4],
-            runtimeCategory=i[5],
-            yearCategory=i[6],
-            combined_features=i[7]
+            tconst=i[0],
+            primaryTitle=i[1],
+            titleType=i[2],
+            genres=i[3],
+            runtimeCategory=i[4],
+            yearCategory=i[5],
+            combined_features=i[6]
             ) for i in results.fetchall()]
 
     return results
