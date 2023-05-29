@@ -106,8 +106,9 @@ services:
       MYSQL_USER: 'root'
       MYSQL_TABLE_USERS: 'Users'
       MYSQL_TABLE_MOVIES: 'table_api'
+      API_LOGS: /app/api_logs
     volumes:
-      - /home/ubuntu/MLOPS-Movie-Recommandation/docker_log:/home/log
+      - /home/ubuntu/MLOPS-Movie-Recommandation/api_logs:/app/api_logs
     ports:
       - "8000:8000"
     restart: on-failure
