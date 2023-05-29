@@ -53,8 +53,7 @@ inspector = inspect(mysql_engine)
 # ---------- Load data for recommendation ---------- #
 
 # Load data from MySQL
-stmt = 'SELECT tconst, combined_features FROM {table} WHERE table_api.startYear > 2000;'.format(table=table_movies)
-#stmt = text('SELECT tconst, combined_features FROM {table}').format(table=table_movies)
+stmt = 'SELECT tconst, combined_features FROM {table};'.format(table=table_movies)
 df = pd.read_sql(text(stmt), conn)
 
 # ---------- Pydantic class ---------- #
@@ -83,13 +82,34 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.3.4",
+    version="1.4.0",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
-              {'name':'Admin', 'description':'Stuff for grown-up'} 
+              {'name':'Admin', 'description':'Staff only'} 
              ]
 )
+
+# ---------- SECURITY : ADMIN ---------- #
+
+
+API_KEY = "admin"
+API_KEY_NAME = "admin"
+
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header == API_KEY:
+        return api_key_header
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Could not validate credentials"
+    )
+
+# ---------- SECURITY : USERS ---------- #
+
+
+
 
 # ---------- API Routes ---------- #
 
@@ -116,6 +136,7 @@ async def get_users():
             password=i[2],
             email=i[3]
             ) for i in results.fetchall()]
+    
     return results
 
 
