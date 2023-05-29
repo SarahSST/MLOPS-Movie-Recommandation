@@ -104,6 +104,8 @@ services:
       MYSQL_ROOT_PASSWORD: "my-secret-pw"
       MYSQL_DATABASE: "db_movie"
       MYSQL_USER: 'root'
+      MYSQL_TABLE_USERS: 'Users'
+      MYSQL_TABLE_MOVIES: 'table_api'
     volumes:
       - /home/ubuntu/MLOPS-Movie-Recommandation/docker_log:/home/log
     ports:
