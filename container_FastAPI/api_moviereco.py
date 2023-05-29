@@ -53,7 +53,7 @@ inspector = inspect(mysql_engine)
 # ---------- Load data for recommendation ---------- #
 
 # Load data from MySQL
-stmt = 'SELECT tconst, combined_features FROM {table}'.format(table=table_movies)
+stmt = 'SELECT tconst, combined_features FROM {table} WHERE table_api.startYear > 2000;'.format(table=table_movies)
 #stmt = text('SELECT tconst, combined_features FROM {table}').format(table=table_movies)
 df = pd.read_sql(text(stmt), conn)
 
@@ -83,7 +83,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.3.3",
+    version="1.3.4",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
