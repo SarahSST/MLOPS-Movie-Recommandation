@@ -60,9 +60,10 @@ df = pd.read_sql(stmt, conn)
 # ---------- Pydantic class ---------- #
 
 class User(BaseModel):
-    user_id: int = 0
-    username: str = 'daniel'
-    email: str = 'daniel@datascientest.com'
+    user_id: int
+    username: str 
+    password: str
+    email: str
 
 class Movie(BaseModel):
     index:str
@@ -80,7 +81,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.2.0",
+    version="1.2.1",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -95,8 +96,11 @@ async def get_status():
     return 200
 
 
-@api.get('/users', tags=['Info'])
+@api.get('/users',  name="Return a list of users", response_model=User, tags=['Info'])
 async def get_users():
+    """ 
+    Return the list of users
+    """
     with mysql_engine.connect() as connection:
         results = connection.execute(text('SELECT * FROM Users;'))
 
@@ -104,7 +108,8 @@ async def get_users():
         User(
             user_id=i[0],
             username=i[1],
-            email=i[2]
+            password=i[2]
+            email=i[3]
             ) for i in results.fetchall()]
     return results
 
