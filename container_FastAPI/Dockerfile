@@ -15,7 +15,8 @@ RUN pip3 install requests \
     pandas \
     scikit-learn \
     fastapi \
-    uvicorn
+    uvicorn \
+    passlib
 
 EXPOSE 8000
 WORKDIR /home
