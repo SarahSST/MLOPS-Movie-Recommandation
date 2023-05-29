@@ -53,8 +53,9 @@ inspector = inspect(mysql_engine)
 # ---------- Load data for recommendation ---------- #
 
 # Load data from MySQL
-stmt = text('SELECT tconst, combined_features FROM {table}').format(table=table_movies)
-df = pd.read_sql(stmt, conn)
+stmt = 'SELECT tconst, combined_features FROM {table}'.format(table=table_movies)
+#stmt = text('SELECT tconst, combined_features FROM {table}').format(table=table_movies)
+df = pd.read_sql(text(stmt), conn)
 
 # ---------- Pydantic class ---------- #
 
@@ -102,8 +103,11 @@ async def get_users():
     """ 
     Return the list of users
     """
+
+    stmt = 'SELECT * FROM {table};'.format(table=table_users)
+
     with mysql_engine.connect() as connection:
-        results = connection.execute(text('SELECT * FROM {table};')).format(table=table_users)
+        results = connection.execute(text(stmt))
 
     results = [
         User(
@@ -121,8 +125,10 @@ async def list_genres(tconst):
     Return the list of existing genres
     """
 
+    stmt = 'SELECT * FROM {table} WHERE tconst = {tconst};'.format(table=table_movies, tconst=tconst)
+
     with mysql_engine.connect() as connection:
-        results = connection.execute(text('SELECT * FROM {table} WHERE tconst = {tconst};'.format(table=table_movies, tconst=tconst)))
+        results = connection.execute(text(stmt))
 
     results = [
         Movie(
@@ -190,10 +196,10 @@ async def list_films(number:int):
     get a list of films
     """
 
-    stmt = text('SELECT * FROM {table} LIMIT {number};'.format(table=table_movies, number=number))
+    stmt = 'SELECT * FROM {table} LIMIT {number};'.format(table=table_movies, number=number)
 
     with mysql_engine.connect() as connection:
-        results = connection.execute(stmt)
+        results = connection.execute(text(stmt))
 
     results = [
         Movie(
