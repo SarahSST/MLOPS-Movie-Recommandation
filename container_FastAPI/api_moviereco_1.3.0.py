@@ -23,9 +23,9 @@ from sqlalchemy_utils import database_exists, create_database
 mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
-database_name = os.environ.get('MYSQL_DATABASE')
-table_users = os.environ.get('MYSQL_TABLE_USERS')
-table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
+#database_name = os.environ.get('MYSQL_DATABASE')
+database_name = 'db_movie'
+
 
 
 # ---------- Function definition ---------- #
@@ -53,13 +53,13 @@ inspector = inspect(mysql_engine)
 # ---------- Load data for recommendation ---------- #
 
 # Load data from MySQL
-stmt = text('SELECT tconst, combined_features FROM {table}').format(table=table_movies)
+stmt = text('SELECT * FROM table_api')
 df = pd.read_sql(stmt, conn)
 
 # ---------- Pydantic class ---------- #
 
 class User(BaseModel):
-    user_id: str
+    user_id: int
     username: str
     password: str
     email: str
@@ -103,7 +103,7 @@ async def get_users():
     Return the list of users
     """
     with mysql_engine.connect() as connection:
-        results = connection.execute(text('SELECT * FROM {table};')).format(table=table_users)
+        results = connection.execute(text('SELECT * FROM Users;'))
 
     results = [
         User(
@@ -122,7 +122,7 @@ async def list_genres(tconst):
     """
 
     with mysql_engine.connect() as connection:
-        results = connection.execute(text('SELECT * FROM {table} WHERE tconst = {tconst};'.format(table=table_movies, tconst=tconst)))
+        results = connection.execute(text('SELECT * FROM table_api WHERE tconst = {};'.format(tconst)))
 
     results = [
         Movie(
@@ -190,7 +190,7 @@ async def list_films(number:int):
     get a list of films
     """
 
-    stmt = text('SELECT * FROM {table} LIMIT {number};'.format(table=table_movies, number=number))
+    stmt = text('SELECT * FROM table_api LIMIT {number};'.format(number=number))
 
     with mysql_engine.connect() as connection:
         results = connection.execute(stmt)
