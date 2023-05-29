@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `Users`
+--
+
+DROP TABLE IF EXISTS `Users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Users` (
+  `user_id` int NOT NULL,
+  `username` varchar(200) DEFAULT NULL,
+  `password` varchar(200) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Users`
+--
+
+LOCK TABLES `Users` WRITE;
+/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
+INSERT INTO `Users` VALUES (1,'Daniel','daniel@mail.com','Daniel'),(2,'Dominique','dominique@mail.com','Dominique'),(3,'Diane','daisy@mail.com','Diane');
+/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `table_movies`
 --
 
@@ -47,34 +73,6 @@ INSERT INTO `table_movies` VALUES (21594,'tt15472390','movie','Anandham Vilayadu
 INSERT INTO `table_movies` VALUES (32477,'tt9897258','movie','Rose Stone Star','Drama','F','J','movie Drama F J'),(32478,'tt9898844','movie','The Hunting','Horror,Mystery,Thriller','F','K','movie Horror,Mystery,Thriller F K'),(32479,'tt9898858','movie','Coffee & Kareem','Action,Comedy,Crime','F','J','movie Action,Comedy,Crime F J'),(32480,'tt9899828','movie','Frankie\'s Redemption','Action,Drama','A','K','movie Action,Drama A K'),(32481,'tt9900940','movie','Scrapper','Crime,Drama,Thriller','F','K','movie Crime,Drama,Thriller F K'),(32482,'tt9902160','movie','Herself','Drama','F','J','movie Drama F J'),(32483,'tt9904004','movie','Your Iron Lady','Drama','F','J','movie Drama F J'),(32484,'tt9904802','movie','Enemy Lines','War','F','J','movie War F J'),(32485,'tt9907782','movie','The Cursed','Fantasy,Horror,Mystery','F','K','movie Fantasy,Horror,Mystery F K'),(32486,'tt9908390','movie','Le lion','Comedy','F','J','movie Comedy F J'),(32487,'tt9910530','movie','Svartklubb','Horror','F','J','movie Horror F J'),(32488,'tt9910648','movie','The Good Americans: One Revolution, Two Nations','Documentary','A','K','movie Documentary A K'),(32489,'tt9911046','movie','The Saving','Action,Drama','A','J','movie Action,Drama A J'),(32490,'tt9911196','movie','The Marriage Escape','Comedy,Drama','F','J','movie Comedy,Drama F J'),(32491,'tt9913288','movie','Letters','Drama','A','J','movie Drama A J'),(32492,'tt9914192','movie','No Gogó do Paulinho','Comedy','F','J','movie Comedy F J'),(32493,'tt9914972','movie','Blind Ambition','Documentary','F','K','movie Documentary F K'),(32494,'tt9916190','movie','Safeguard','Action,Adventure,Thriller','F','J','movie Action,Adventure,Thriller F J'),(32495,'tt9916270','movie','Il talento del calabrone','Thriller','F','J','movie Thriller F J'),(32496,'tt9916362','movie','Coven','Drama,History','F','J','movie Drama,History F J');
 /*!40000 ALTER TABLE `table_movies` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `table_test`
---
-
-DROP TABLE IF EXISTS `table_test`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `table_test` (
-  `tconst` varchar(15) NOT NULL,
-  `primaryTitle` varchar(100) DEFAULT NULL,
-  `titleType` varchar(50) DEFAULT NULL,
-  `genres` varchar(100) DEFAULT NULL,
-  `runtimeCategory` varchar(5) DEFAULT NULL,
-  `yearCategory` varchar(5) DEFAULT NULL,
-  `combined_features` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`tconst`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `table_test`
---
-
-LOCK TABLES `table_test` WRITE;
-/*!40000 ALTER TABLE `table_test` DISABLE KEYS */;
-/*!40000 ALTER TABLE `table_test` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -85,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-24 15:37:40
+-- Dump completed on 2023-05-29  7:06:05
