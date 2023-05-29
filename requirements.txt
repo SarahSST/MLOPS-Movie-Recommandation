@@ -7,4 +7,3 @@ SQLAlchemy-Utils==0.41.1
 uvicorn==0.22.0
 mysqlclient==2.1.1
 mysql-connector-python==8.0.33
-passlib==1.7.4
