@@ -24,7 +24,7 @@ mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 database_name = os.environ.get('MYSQL_DATABASE')
-table_movies = os.environ.get('MYSQL_TABLE')
+
 
 
 # ---------- Function definition ---------- #
@@ -48,8 +48,6 @@ mysql_engine = create_engine(connection_url, echo=True)
 conn = mysql_engine.connect()
 inspector = inspect(mysql_engine)
 
-# Check if MySQL DB is healty
-# To be added
 
 # ---------- Load data for recommendation ---------- #
 
@@ -61,7 +59,7 @@ df = pd.read_sql(stmt, conn)
 
 class User(BaseModel):
     user_id: int
-    username: str 
+    username: str
     password: str
     email: str
 
@@ -96,22 +94,22 @@ async def get_status():
     return 200
 
 
-@api.get('/users',  name="Return a list of users", response_model=User, tags=['Info'])
-async def get_users():
-    """ 
-    Return the list of users
-    """
-    with mysql_engine.connect() as connection:
-        results = connection.execute(text('SELECT * FROM Users;'))
+# @api.get('/users',  name="Return a list of users", response_model=User, tags=['Info'])
+# async def get_users():
+#     """ 
+#     Return the list of users
+#     """
+#     with mysql_engine.connect() as connection:
+#         results = connection.execute(text('SELECT * FROM Users;'))
 
-    results = [
-        User(
-            user_id=i[0],
-            username=i[1],
-            password=i[2]
-            email=i[3]
-            ) for i in results.fetchall()]
-    return results
+#     results = [
+#         User(
+#             user_id=i[0],
+#             username=i[1],
+#             password=i[2]
+#             email=i[3]
+#             ) for i in results.fetchall()]
+#     return results
 
 
 @api.get('/list-genres/{tconst:str}', name="Return a list of existing genres" , response_model=Movie, tags=['Info'])
