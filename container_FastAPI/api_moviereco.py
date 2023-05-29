@@ -79,7 +79,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.2.1",
+    version="1.2.3",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -94,22 +94,22 @@ async def get_status():
     return 200
 
 
-# @api.get('/users',  name="Return a list of users", response_model=User, tags=['Info'])
-# async def get_users():
-#     """ 
-#     Return the list of users
-#     """
-#     with mysql_engine.connect() as connection:
-#         results = connection.execute(text('SELECT * FROM Users;'))
+@api.get('/users',  name="Return a list of users", response_model=User, tags=['Info'])
+async def get_users():
+    """ 
+    Return the list of users
+    """
+    with mysql_engine.connect() as connection:
+        results = connection.execute(text('SELECT * FROM Users;'))
 
-#     results = [
-#         User(
-#             user_id=i[0],
-#             username=i[1],
-#             password=i[2]
-#             email=i[3]
-#             ) for i in results.fetchall()]
-#     return results
+    results = [
+        User(
+            user_id=i[0],
+            username=i[1],
+            password=i[2]
+            email=i[3]
+            ) for i in results.fetchall()]
+    return results
 
 
 @api.get('/list-genres/{tconst:str}', name="Return a list of existing genres" , response_model=Movie, tags=['Info'])
@@ -123,7 +123,7 @@ async def list_genres(tconst):
 
     results = [
         Movie(
-            index=i[0]
+            index=i[0],
             tconst=i[1],
             primaryTitle=i[2],
             titleType=i[3],
