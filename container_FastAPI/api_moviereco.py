@@ -23,7 +23,8 @@ from sqlalchemy_utils import database_exists, create_database
 mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
-database_name = os.environ.get('MYSQL_DATABASE')
+#database_name = os.environ.get('MYSQL_DATABASE')
+database_name = 'table_api'
 
 
 
@@ -52,7 +53,7 @@ inspector = inspect(mysql_engine)
 # ---------- Load data for recommendation ---------- #
 
 # Load data from MySQL
-stmt = text('SELECT * FROM table_movies')
+stmt = text('SELECT * FROM table_api')
 df = pd.read_sql(stmt, conn)
 
 # ---------- Pydantic class ---------- #
@@ -66,8 +67,10 @@ class User(BaseModel):
 class Movie(BaseModel):
     index:str
     tconst: str
-    primaryTitle: str
     titleType: str
+    primaryTitle: str
+    startYear:int
+    runtimeMinutes:int
     genres: str
     runtimeCategory: str
     yearCategory: str
@@ -79,7 +82,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.2.5",
+    version="1.3.1",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -119,18 +122,20 @@ async def list_genres(tconst):
     """
 
     with mysql_engine.connect() as connection:
-        results = connection.execute(text('SELECT * FROM table_movies WHERE tconst = {};'.format(tconst)))
+        results = connection.execute(text('SELECT * FROM table_api WHERE tconst = {};'.format(tconst)))
 
     results = [
         Movie(
             index=i[0],
             tconst=i[1],
+            titleType=i[2],
             primaryTitle=i[2],
-            titleType=i[3],
-            genres=i[4],
-            runtimeCategory=i[5],
-            yearCategory=i[6],
-            combined_features=i[7]
+            startYear=i[4],
+            runtimeMinutes=i[5],
+            genres=i[6],
+            runtimeCategory=i[7],
+            yearCategory=i[8],
+            combined_features=i[9]
             ) for i in results.fetchall()]
 
     if len(results) == 0:
@@ -179,13 +184,13 @@ async def get_recommendation(movie_user_title:str):
 
 
 
-@api.get('/get-films-list/{number:int}', name="temp" , tags=['Info'])
+@api.get('/get-films-list/{number:int}', name="get-films-list" , tags=['Info'])
 async def list_films(number:int):
     """ 
     get a list of films
     """
 
-    stmt = text('SELECT * FROM table_movies LIMIT {number};'.format(number=number))
+    stmt = text('SELECT * FROM table_api LIMIT {number};'.format(number=number))
 
     with mysql_engine.connect() as connection:
         results = connection.execute(stmt)
@@ -194,12 +199,14 @@ async def list_films(number:int):
         Movie(
             index=i[0],
             tconst=i[1],
+            titleType=i[2],
             primaryTitle=i[2],
-            titleType=i[3],
-            genres=i[4],
-            runtimeCategory=i[5],
-            yearCategory=i[6],
-            combined_features=i[7]
+            startYear=i[4],
+            runtimeMinutes=i[5],
+            genres=i[6],
+            runtimeCategory=i[7],
+            yearCategory=i[8],
+            combined_features=i[9]
             ) for i in results.fetchall()]
 
     return results
