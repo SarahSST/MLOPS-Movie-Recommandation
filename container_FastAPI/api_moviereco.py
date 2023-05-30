@@ -83,7 +83,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.4.8",
+    version="1.4.9",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -154,7 +154,7 @@ def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
 # stmt = 'SELECT tconst, combined_features FROM {table};'.format(table=table_movies)
 # df = pd.read_sql(sql=text(stmt), con=conn)
 
-df = pd.read_sql(table_name=table_movies, con=conn, columns=['tconst', 'combined_features'])
+df = pd.read_sql_table(table_name=table_movies, con=conn, columns=['tconst', 'combined_features'])
 
 # ---------- API Routes ---------- #
 
