@@ -58,12 +58,6 @@ conn = mysql_engine.connect()
 inspector = inspect(mysql_engine)
 
 
-# ---------- Load data for recommendation ---------- #
-
-# Load data from MySQL
-stmt = 'SELECT tconst, combined_features FROM {table};'.format(table=table_movies)
-df = pd.read_sql(text(stmt), conn)
-
 # ---------- Pydantic class ---------- #
 
 class User(BaseModel):
@@ -73,7 +67,6 @@ class User(BaseModel):
     email: str
 
 class Movie(BaseModel):
-    index:str
     tconst: str
     titleType: str
     primaryTitle: str
@@ -90,7 +83,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.4.5",
+    version="1.4.7",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -151,7 +144,14 @@ def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
             detail="Incorrect ID or password",
             headers={"WWW-Authenticate": "Basic"},
         )
+    #return credentials.username 
 
+
+# ---------- Load data for recommandation ---------- #
+
+# Load data from MySQL
+stmt = 'SELECT tconst, combined_features FROM {table};'.format(table=table_movies)
+df = pd.read_sql(text(stmt), conn)
 
 
 # ---------- API Routes ---------- #
@@ -162,7 +162,7 @@ async def get_status():
 
 
 @api.get('/welcome',  name="Return a list of users", response_model=User, tags=['Info'])
-async def get_users(api_key_header: APIKey = Depends(get_api_key)):
+async def get_users(username: str = Depends(get_current_user)):
     """ 
     Return the list of users
     """
@@ -198,16 +198,15 @@ async def list_genres(tconst, username: str = Depends(get_current_user)):
 
     results = [
         Movie(
-            index=i[0],
-            tconst=i[1],
-            titleType=i[2],
-            primaryTitle=i[3],
-            startYear=i[4],
-            runtimeMinutes=i[5],
-            genres=i[6],
-            runtimeCategory=i[7],
-            yearCategory=i[8],
-            combined_features=i[9]
+            tconst=i[0],
+            titleType=i[1],
+            primaryTitle=i[2],
+            startYear=i[3],
+            runtimeMinutes=i[4],
+            genres=i[5],
+            runtimeCategory=i[6],
+            yearCategory=i[7],
+            combined_features=i[8]
             ) for i in results.fetchall()]
 
     if len(results) == 0:
@@ -268,16 +267,15 @@ async def list_films(number:int, username: str = Depends(get_current_user)):
 
     results = [
         Movie(
-            index=i[0],
-            tconst=i[1],
-            titleType=i[2],
-            primaryTitle=i[3],
-            startYear=i[4],
-            runtimeMinutes=i[5],
-            genres=i[6],
-            runtimeCategory=i[7],
-            yearCategory=i[8],
-            combined_features=i[9]
+            tconst=i[0],
+            titleType=i[1],
+            primaryTitle=i[2],
+            startYear=i[3],
+            runtimeMinutes=i[4],
+            genres=i[5],
+            runtimeCategory=i[6],
+            yearCategory=i[7],
+            combined_features=i[8]
             ) for i in results.fetchall()]
 
     return results
