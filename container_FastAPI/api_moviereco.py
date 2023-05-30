@@ -28,8 +28,10 @@ mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 database_name = os.environ.get('MYSQL_DATABASE')
-table_users = os.environ.get('MYSQL_TABLE_USERS')
-table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
+# table_users = os.environ.get('MYSQL_TABLE_USERS')
+# table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
+table_users = "Users"
+table_movies =  "table_api"
 
 
 # Creating the URL connection
@@ -46,6 +48,11 @@ conn = mysql_engine.connect()
 inspector = inspect(mysql_engine)
 
 
+# ---------- Function definition ---------- #
+
+def convert_df_to_json(df):
+    return Response(df.to_json(orient="records"), media_type="application/json")
+
 # ---------- Load data for recommandation ---------- #
 
 
@@ -55,6 +62,9 @@ df = pd.read_sql(sql=text(stmt), con=conn)
 
 #df = pd.read_sql_table(table_name=table_movies, con=conn, columns=['tconst', 'combined_features'])
 
+stmt = 'SELECT * FROM {table};'.format(table=table_users)
+df_users = pd.read_sql(sql=text(stmt), con=conn)
+
 
 # ---------- Pydantic class ---------- #
 
@@ -62,6 +72,7 @@ df = pd.read_sql(sql=text(stmt), con=conn)
 class User(BaseModel):
     user_id: str
     username: str
+    role:str
     password: str
     email: str
 
@@ -83,7 +94,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.0",
+    version="1.5.1",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -176,8 +187,9 @@ async def get_users(username: str = Depends(get_current_user)):
         User(
             user_id=i[0],
             username=i[1],
-            password=i[2],
-            email=i[3]
+            role=i[2],
+            password=i[3],
+            email=i[4]
             ) for i in results.fetchall()]
     
     return results[1]
@@ -306,7 +318,6 @@ async def get_users(api_key_header: APIKey = Depends(get_api_key)):
     """
 
     stmt = 'SELECT * FROM {table};'.format(table=table_users)
-    stmt = 'SELECT * FROM {table};'.format(table=table_users)
 
     with mysql_engine.connect() as connection:
         results = connection.execute(text(stmt))
@@ -315,8 +326,17 @@ async def get_users(api_key_header: APIKey = Depends(get_api_key)):
         User(
             user_id=i[0],
             username=i[1],
-            password=i[2],
-            email=i[3]
+            role=i[2],
+            password=i[3],
+            email=i[4]
             ) for i in results.fetchall()]
     
     return results
+
+@api.get('/get-users_bis',  name="Return a list of users", response_model=User, tags=['Admin'])
+async def get_users(api_key_header: APIKey = Depends(get_api_key)):
+    """ 
+    Return a list of similar movies
+    """
+
+    return convert_df_to_json(df_users)
