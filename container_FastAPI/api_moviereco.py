@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.responses import JSONResponse
 import os
+import time
 
 from fastapi import Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
@@ -94,7 +95,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.1",
+    version="1.5.2",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -234,6 +235,7 @@ async def get_recommendation(movie_user_title:str, username: str = Depends(get_c
     Return a list of similar movies
     """
 
+    start_time = time.time()
 
     # Find movie index
     movie_user_index = df[df['tconst'] == movie_user_title].index.item()
@@ -261,6 +263,33 @@ async def get_recommendation(movie_user_title:str, username: str = Depends(get_c
 
     list_titles = movie_reco['tconst'].tolist()
     
+    end_time = time.time()
+    
+
+    # Log
+    duration = end_time - start_time
+
+    output = '''
+    ============================
+        Recommandation log
+    ============================
+
+    request done at "/permissions"
+    | username="alice"
+    | password="wonderland"
+
+    Target movie = https://www.imdb.com/title/{movie_id}/
+    Duration = {duration}s
+    Recommandation=https://www.imdb.com/title/{reco}/
+
+    '''
+
+    output.format(movie_id=movie_user_title, duration=duration, reco=list_titles)
+
+    if os.environ.get('LOG') == 1:
+        with open('app/api_logs/api_test.log', 'a') as file:
+            file.write(output)
+
     return list_titles
 
 
