@@ -95,7 +95,7 @@ services:
     restart: always
 
   container_api:
-    image: cedric1234/api_moviereco:1.5.2
+    image: cedric1234/api_moviereco:1.5.5
     container_name: container_api
     depends_on:
       container_mysql:
@@ -108,7 +108,7 @@ services:
       MYSQL_TABLE_MOVIES: 'table_api'
       LOG: 1
     volumes:
-      - /home/ubuntu/MLOPS-Movie-Recommandation/api_logs:./api_logs
+      - /app/api_logs:/home/ubuntu/log
     ports:
       - "8000:8000"
     restart: on-failure
