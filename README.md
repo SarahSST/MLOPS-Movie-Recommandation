@@ -52,13 +52,16 @@ SQLAlchemy python package requires  mysqlclient and  mysql-connector-python pack
 sudo apt update && apt upgrade
 sudo apt install build-essential libssl-dev
 sudo apt install python3-dev
-
 sudo apt install default-libmysqlclient-dev
+
 # if last package is not found, try this one : 
 sudo apt install libmysqlclient-dev
 
-# At last, a package to be interact direclty with MySQL
+# Package to be interact direclty with MySQL
 sudo apt install mysql-client-core-8.0
+
+# at last, some remaining packages
+sudo apt install pip docker-compose
 ```
 
 #### Python Packages
@@ -73,7 +76,7 @@ pip install -r requirements.txt
 #### Permission changes
 
 ```
-sudo chmod -R 777 logs/ raw_data/ data_processed/ db_dump/ api_logs/
+sudo chmod -R 777 logs/ raw_data/ processed_data/ db_dump/ api_logs/
 ```
 
 #### Airflow initialisation
