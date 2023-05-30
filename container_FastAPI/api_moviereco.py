@@ -95,7 +95,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.4",
+    version="1.5.5",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -107,8 +107,8 @@ api = FastAPI(
 # ---------- SECURITY : ADMIN ---------- #
 
 
-API_KEY = "admin"
-API_KEY_NAME = "admin"
+API_KEY = "Admin"
+API_KEY_NAME = "Admin"
 
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
@@ -128,29 +128,29 @@ security = HTTPBasic()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 users_b = {
-    "alice": {
-        "username": "alice",
-        "name": "Alice",
-        'role' : ['user'],
-        "hashed_password": pwd_context.hash('wonderland'),
-    },
-    "bob" : {
-        "username" :  "bob",
-        "name" : "Bob",
-        'role' : ['user'],
-        "hashed_password" : pwd_context.hash('builder'),
-    },
-    "clementine": {
-        "username": "clementine",
-        "name": "Daniel Datascientest",
-        'role' : ['user'],
-        "hashed_password": pwd_context.hash('mandarine'),
-    },
-    "admin": {
+    "Admin": {
         "username": "admin",
-        "name": "admin",
-        'role' : ['admin', 'user'],
-        "hashed_password": pwd_context.hash('4dm1N'),
+        "name": "Admin",
+        'role' : ['admin'],
+        "hashed_password": pwd_context.hash('Admin'),
+    },
+    "Daniel" : {
+        "username" :  "Daniel",
+        "name" : "Daniel",
+        'role' : ['user'],
+        "hashed_password" : pwd_context.hash('Daniel'),
+    },
+    "Dominique": {
+        "username": "Dominique",
+        "name": "Dominique",
+        'role' : ['user'],
+        "hashed_password": pwd_context.hash('Dominique'),
+    },
+    "Diane": {
+        "username": "Diane",
+        "name": "Diane",
+        'role' : ['user'],
+        "hashed_password": pwd_context.hash('Diane'),
     }
 }
 
@@ -162,7 +162,7 @@ def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
             detail="Incorrect ID or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    #return credentials.username 
+  
 
 
 # ---------- API Routes ---------- #
@@ -178,8 +178,7 @@ async def get_users(username: str = Depends(get_current_user)):
     Return the list of users
     """
 
-    #stmt = 'SELECT * FROM {table};'.format(table=table_users)
-    stmt = 'SELECT * FROM Users;'
+    stmt = 'SELECT * FROM {table};'.format(table=table_users)
 
     with mysql_engine.connect() as connection:
         results = connection.execute(text(stmt))
@@ -274,9 +273,8 @@ async def get_recommendation(movie_user_title:str, username: str = Depends(get_c
         Recommandation log
     ============================
 
-    request done at "/permissions"
-    | username="alice"
-    | password="wonderland"
+    request done at "/get_recommendation"
+    | username={username}
 
     Target movie = https://www.imdb.com/title/{movie_id}/
     Duration = {duration}s
@@ -284,7 +282,7 @@ async def get_recommendation(movie_user_title:str, username: str = Depends(get_c
 
     '''
 
-    output.format(movie_id=movie_user_title, duration=duration, reco=list_titles)
+    output.format(movie_id=movie_user_title, duration=duration, reco=list_titles, username=username)
 
     if os.environ.get('LOG') == '1':
         with open('log_api.log', 'a') as file:
