@@ -51,8 +51,10 @@ inspector = inspect(mysql_engine)
 
 # ---------- Function definition ---------- #
 
+
 def convert_df_to_json(df):
     return Response(df.to_json(orient="records"), media_type="application/json")
+
 
 # ---------- Load data for recommandation ---------- #
 
@@ -61,8 +63,8 @@ def convert_df_to_json(df):
 stmt = 'SELECT tconst, combined_features FROM {table};'.format(table=table_movies)
 df = pd.read_sql(sql=text(stmt), con=conn)
 
-#df = pd.read_sql_table(table_name=table_movies, con=conn, columns=['tconst', 'combined_features'])
 
+# Load users
 stmt = 'SELECT * FROM {table};'.format(table=table_users)
 df_users = pd.read_sql(sql=text(stmt), con=conn)
 
