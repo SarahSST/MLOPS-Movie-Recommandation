@@ -22,7 +22,7 @@ from sqlalchemy_utils import database_exists, create_database
 # -------------------------------------- #
 
 my_dag = DAG(
-    dag_id='Process_Data_MAN_15',
+    dag_id='Process_Data_MAN_16',
     description='Process_Data_MAN',
     tags=['MovieReco', 'Process'],
     schedule_interval=datetime.timedelta(hours=6),
@@ -98,7 +98,7 @@ def process_title_basics(source_path, destination_path):
 
 
         # Limitation of the data set size
-        df = df[df['startYear']>2000]
+        df = df[df['startYear']>2000.0]
         df = df[df['titleType']=='movie']
         df = df[df['isAdult']==0]
 
