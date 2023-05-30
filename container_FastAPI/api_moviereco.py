@@ -1,12 +1,13 @@
 
 # ---------- Imports ---------- #
 
-from fastapi import FastAPI, status, Header, Response, HTTPException, Depends, Security
+from fastapi import FastAPI, status, Header, Response, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.responses import JSONResponse
 import os
 
+from fastapi import Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from passlib.context import CryptContext
 from fastapi.security.api_key import APIKeyHeader, APIKey
@@ -30,6 +31,9 @@ mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 database_name = os.environ.get('MYSQL_DATABASE')
 table_users = os.environ.get('MYSQL_TABLE_USERS')
 table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
+
+API_KEY = "admin"
+API_KEY_NAME = "admin"
 
 
 # ---------- Function definition ---------- #
@@ -86,7 +90,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.4.4",
+    version="1.4.5",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -95,10 +99,6 @@ api = FastAPI(
 )
 
 # ---------- SECURITY : ADMIN ---------- #
-
-
-API_KEY = "admin"
-API_KEY_NAME = "admin"
 
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
@@ -113,6 +113,45 @@ async def get_api_key(api_key_header: str = Security(api_key_header)):
 # ---------- SECURITY : USERS ---------- #
 
 
+security = HTTPBasic()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+users_b = {
+    "alice": {
+        "username": "alice",
+        "name": "Alice",
+        'role' : ['user'],
+        "hashed_password": pwd_context.hash('wonderland'),
+    },
+    "bob" : {
+        "username" :  "bob",
+        "name" : "Bob",
+        'role' : ['user'],
+        "hashed_password" : pwd_context.hash('builder'),
+    },
+    "clementine": {
+        "username": "clementine",
+        "name": "Daniel Datascientest",
+        'role' : ['user'],
+        "hashed_password": pwd_context.hash('mandarine'),
+    },
+    "admin": {
+        "username": "admin",
+        "name": "admin",
+        'role' : ['admin', 'user'],
+        "hashed_password": pwd_context.hash('4dm1N'),
+    }
+}
+
+def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
+    username = credentials.username
+    if not(users_b.get(username)) or not(pwd_context.verify(credentials.password, users_b[username]['hashed_password'])):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect ID or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
 
 
 # ---------- API Routes ---------- #
@@ -122,13 +161,14 @@ async def get_status():
     return 200
 
 
-@api.get('/users',  name="Return a list of users", response_model=User, tags=['Info'])
-async def get_users():
+@api.get('/welcome',  name="Return a list of users", response_model=User, tags=['Info'])
+async def get_users(api_key_header: APIKey = Depends(get_api_key)):
     """ 
     Return the list of users
     """
 
-    stmt = 'SELECT * FROM {table};'.format(table=table_users)
+    #stmt = 'SELECT * FROM {table};'.format(table=table_users)
+    stmt = 'SELECT * FROM Users;'
 
     with mysql_engine.connect() as connection:
         results = connection.execute(text(stmt))
@@ -141,12 +181,12 @@ async def get_users():
             email=i[3]
             ) for i in results.fetchall()]
     
-    return results
+    return results[1]
 
 
 
 @api.get('/get-film-info/{tconst:str}', name="Return information on a film" , response_model=Movie, tags=['Info'])
-async def list_genres(tconst):
+async def list_genres(tconst, username: str = Depends(get_current_user)):
     """ 
     Return information on a film
     """
@@ -179,7 +219,7 @@ async def list_genres(tconst):
 
 
 @api.get('/get_recommendation/{movie_user_title:str}', name="Return a list of similar movies" , tags=['MovieReco'])
-async def get_recommendation(movie_user_title:str):
+async def get_recommendation(movie_user_title:str, username: str = Depends(get_current_user)):
     """ 
     Return a list of similar movies
     """
@@ -216,7 +256,7 @@ async def get_recommendation(movie_user_title:str):
 
 
 @api.get('/get-films-list/{number:int}', name="get-films-list" , tags=['Info'])
-async def list_films(number:int):
+async def list_films(number:int, username: str = Depends(get_current_user)):
     """ 
     get a list of films
     """
@@ -260,3 +300,26 @@ async def get_columns(TableName:str, api_key_header: APIKey = Depends(get_api_ke
     """
 
     return inspector.get_columns(table_name=TableName)
+
+
+@api.get('/get-users',  name="Return a list of users", response_model=User, tags=['Admin'])
+async def get_users(api_key_header: APIKey = Depends(get_api_key)):
+    """ 
+    Return the list of users
+    """
+
+    stmt = 'SELECT * FROM {table};'.format(table=table_users)
+    stmt = 'SELECT * FROM {table};'.format(table=table_users)
+
+    with mysql_engine.connect() as connection:
+        results = connection.execute(text(stmt))
+
+    results = [
+        User(
+            user_id=i[0],
+            username=i[1],
+            password=i[2],
+            email=i[3]
+            ) for i in results.fetchall()]
+    
+    return results
