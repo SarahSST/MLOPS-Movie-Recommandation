@@ -95,7 +95,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.2",
+    version="1.5.3",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -287,7 +287,7 @@ async def get_recommendation(movie_user_title:str, username: str = Depends(get_c
     output.format(movie_id=movie_user_title, duration=duration, reco=list_titles)
 
     if os.environ.get('LOG') == 1:
-        with open('app/api_logs/api_test.log', 'a') as file:
+        with open('log_api.log', 'a') as file:
             file.write(output)
 
     return list_titles
