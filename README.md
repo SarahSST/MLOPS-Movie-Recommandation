@@ -103,7 +103,7 @@ FastAPI is available on port 8000
 
 Tunnel SSH initialisation :
 ``` bash
-ssh -i "data_enginering_machine.pem" -L 8000:localhost:8000 -L 8080:localhost:8080 ubuntu@54.73.108.184
+ssh -i "your_key.pem" -L 8000:localhost:8000 -L 8080:localhost:8080 ubuntu@your-ip-address
 
 ```
 
