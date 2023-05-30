@@ -22,7 +22,7 @@ from sqlalchemy_utils import database_exists, create_database
 # -------------------------------------- #
 
 my_dag = DAG(
-    dag_id='Process_Data_MAN_12',
+    dag_id='Process_Data_MAN_15',
     description='Process_Data_MAN',
     tags=['MovieReco', 'Process'],
     schedule_interval=datetime.timedelta(hours=6),
@@ -45,8 +45,6 @@ processed_filenames = ['title.basics_reduced.zip',
 
 path_raw_data = '/app/raw_data/'
 path_processed_data = '/app/processed_data/'
-#path_reco_data = '/app/reco_data/'
-
 
 mysql_url = 'container_mysql:3306'
 mysql_user = 'root'
@@ -60,7 +58,7 @@ database_name = 'db_movie'
 
 def process_title_basics(source_path, destination_path):
         """
-        description to add
+        This function clean the file title_basics, discretise some fields and reduce the size of the dataset
         """
         print('title basics started')
 
@@ -100,6 +98,7 @@ def process_title_basics(source_path, destination_path):
 
 
         # Limitation of the data set size
+        df = df[df['startYear']>2000]
         df = df[df['titleType']=='movie']
         df = df[df['isAdult']==0]
 
@@ -219,36 +218,18 @@ def feature_build(source_path, destination_path):
 
 def load_mysql(source_path):
     """
-    Description to add
+    This function load data from a local file and store it in MySQL database
     """
     print('load_mysql started')
 
     # Load data
     column_list = [
-        'tconst', 
-        'titleType', 
-        'primaryTitle', 
-        'startYear', 
-        'runtimeMinutes', 
-        'genres', 
-        'runtimeCategory', 
-        'yearCategory',
-        'combined_features'
-        ]
-    dict_types = {
-        'tconst':object, 
-        'titleType':object, 
-        'primaryTitle':object, 
-        'startYear':int, 
-        'runtimeMinutes':int, 
-        'genres':object, 
-        'runtimeCategory':object, 
-        'yearCategory':object,
-        'combined_features':object
-        }
+        'tconst', 'titleType', 'primaryTitle','startYear','runtimeMinutes', 'genres', 'runtimeCategory', 'yearCategory','combined_features']
+    dict_types = {'tconst':object,'titleType':object, 'primaryTitle':object, 'startYear':int, 'runtimeMinutes':int, 'genres':object, 'runtimeCategory':object, 'yearCategory':object, 'combined_features':object}
 
     df = pd.read_csv(source_path, usecols= column_list, dtype=dict_types, compression = 'zip', sep = ',')
 
+    print('pandas loaded')
 
     # Creating the URL connection
     connection_url = 'mysql://{user}:{password}@{url}/{database}'.format(
@@ -281,9 +262,10 @@ def load_mysql(source_path):
         ) 
 
         meta.create_all(engine)
+        print('table created')
 
     # Store data in MySQL DB
-    df.to_sql('table_api', conn, if_exists='replace')
+    df.to_sql('table_api', conn, if_exists='replace', index=False)
 
     conn.close()
 
