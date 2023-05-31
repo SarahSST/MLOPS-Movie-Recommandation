@@ -96,7 +96,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.8",
+    version="1.5.9",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -180,8 +180,8 @@ async def get_users(username: str = Depends(get_current_user)):
     Return the list of users
     """
 
-    #stmt = 'SELECT * FROM {table};'.format(table=table_users)
-    stmt = 'SELECT * FROM {table} WHERE user_id = {value};'.format(table=table_users, value='Diane')
+    stmt = 'SELECT * FROM {table};'.format(table=table_users)
+    #stmt = 'SELECT * FROM {table} WHERE user_id = {value};'.format(table=table_users, value='Diane')
 
     with mysql_engine.connect() as connection:
         results = connection.execute(text(stmt))
