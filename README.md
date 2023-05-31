@@ -100,10 +100,11 @@ docker-compose up -d
 
 Airflow interface will be available on port 8080
 FastAPI is available on port 8000
+Streamlit App is available on port 8501
 
 Tunnel SSH initialisation :
 ``` bash
-ssh -i "your_key.pem" -L 8000:localhost:8000 -L 8080:localhost:8080 ubuntu@your-ip-address
+ssh -i "your_key.pem" -L 8000:localhost:8000 -L 8080:localhost:8080 -L 8501:localhost:8501 ubuntu@your-ip-address
 
 ```
 
