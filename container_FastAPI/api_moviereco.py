@@ -25,14 +25,13 @@ from sqlalchemy_utils import database_exists, create_database
 
 # ---------- MySQL Connection ---------- #
 
+
 mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 database_name = os.environ.get('MYSQL_DATABASE')
 table_users = os.environ.get('MYSQL_TABLE_USERS')
 table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
-#table_users = "Users"
-#table_movies =  "table_api"
 
 
 # Creating the URL connection
@@ -97,7 +96,7 @@ class Movie(BaseModel):
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.7",
+    version="1.5.8",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -109,8 +108,6 @@ api = FastAPI(
 # ---------- SECURITY : ADMIN ---------- #
 
 
-# API_KEY = "Admin"
-# API_KEY_NAME = "Admin"
 API_KEY = os.environ.get('API_KEY')
 API_KEY_NAME = os.environ.get('API_KEY_NAME')
 
@@ -184,7 +181,7 @@ async def get_users(username: str = Depends(get_current_user)):
     """
 
     #stmt = 'SELECT * FROM {table};'.format(table=table_users)
-    stmt = 'SELECT * FROM {table} WHERE user_id = {value};'.format(table=table_users, value=username)
+    stmt = 'SELECT * FROM {table} WHERE user_id = {value};'.format(table=table_users, value='Diane')
 
     with mysql_engine.connect() as connection:
         results = connection.execute(text(stmt))
