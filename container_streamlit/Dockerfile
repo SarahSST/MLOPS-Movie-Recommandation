@@ -6,13 +6,17 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install streamlit requests
 
-WORKDIR /home
-RUN mkdir streamlit
-RUN cd streamlit
+RUN mkdir app
+RUN cd app
+WORKDIR /app
+
 RUN mkdir asset pages utils
 
-EXPOSE 9000
-ADD streamlit_app.py ./streamlit
-ADD page01.py ./streamlit/pages
-ADD page02.py ./streamlit/pages
-CMD python3 streamlit run streamlit_app.py
+EXPOSE 8501
+ADD streamlit_app.py ./
+ADD 1_Welcome.py ./pages
+ADD 2_Movie-Reco.py ./pages
+
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
