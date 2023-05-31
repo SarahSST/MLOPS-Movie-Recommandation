@@ -4,15 +4,12 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip
 
+RUN pip install streamlit requests
+
 WORKDIR /home
 RUN mkdir streamlit
 RUN cd streamlit
 RUN mkdir asset pages utils
-
-RUN python3 -m venv .venv
-RUN source .venv/bin/activate
-
-RUN pip install streamlit requests
 
 EXPOSE 9000
 ADD streamlit_app.py ./streamlit
