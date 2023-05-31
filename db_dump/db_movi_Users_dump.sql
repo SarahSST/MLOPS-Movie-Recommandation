@@ -38,7 +38,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'admin','admin','admin@mail.com','admin'),(2,'Daniel','user','daniel@mail.com','Daniel'),(3,'Dominique','user','dominique@mail.com','Dominique'),(4,'Diane','user','diane@mail.com','Diane');
+INSERT INTO `Users` VALUES (1,'Admin','admin','admin@mail.com','Admin'),(2,'Daniel','user','daniel@mail.com','Daniel'),(3,'Dominique','user','dominique@mail.com','Dominique'),(4,'Diane','user','diane@mail.com','Diane');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
