@@ -95,12 +95,14 @@ services:
     restart: always
 
   container_api:
-    image: cedric1234/api_moviereco:1.5.5
+    image: cedric1234/api_moviereco:1.5.6
     container_name: container_api
     depends_on:
       container_mysql:
         condition: service_healthy
     environment:
+      API_KEY: "Admin"
+      API_KEY_NAME: "Admin"
       MYSQL_ROOT_PASSWORD: "my-secret-pw"
       MYSQL_DATABASE: "db_movie"
       MYSQL_USER: 'root'
