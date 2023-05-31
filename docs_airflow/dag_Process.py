@@ -22,10 +22,10 @@ from sqlalchemy_utils import database_exists, create_database
 # -------------------------------------- #
 
 my_dag = DAG(
-    dag_id='Process_Data_MAN_17',
-    description='Process_Data_MAN',
+    dag_id='Process_Data',
+    description='Process_Data',
     tags=['MovieReco', 'Process'],
-    schedule_interval=datetime.timedelta(hours=6),
+    schedule_interval=datetime.timedelta(minutes=30),
     default_args={
         'owner': 'airflow',
         'start_date': days_ago(0, minute=1),
@@ -98,7 +98,7 @@ def process_title_basics(source_path, destination_path):
 
 
         # Limitation of the data set size
-        df = df[df['startYear']>2000.0]
+        df = df[df['startYear']>2010.0]
         df = df[df['titleType']=='movie']
         df = df[df['isAdult']==0]
 
@@ -234,15 +234,16 @@ def load_mysql_pandas(source_path):
     conn = engine.connect()
     inspector = inspect(engine)
 
+  
+    # Drop of the table
+    sql = text('DROP TABLE IF EXISTS table_api;')
+    result = engine.execute(sql)
+    print('table dropped')
+
     # Table creation
-    if 'table_api' in inspector.get_table_names():
+    inspector = inspect(engine)
 
-        # Drop of the table
-        sql = text('DROP TABLE IF EXISTS table_api;')
-        result = engine.execute(sql)
-        print('table dropped')
-
-        # Creation of the table
+    if not 'table_api' in inspector.get_table_names():
         meta = MetaData()
 
         table_api = Table(
@@ -262,7 +263,7 @@ def load_mysql_pandas(source_path):
         meta.create_all(engine)
         print('table created')
 
-    # Load data
+    # Load data from .csv
     column_list = [
         'tconst', 'titleType', 'primaryTitle','startYear','runtimeMinutes', 'genres', 'runtimeCategory', 'yearCategory','combined_features']
     dict_types = {'tconst':object,'titleType':object, 'primaryTitle':object, 'startYear':int, 'runtimeMinutes':int, 'genres':object, 'runtimeCategory':object, 'yearCategory':object, 'combined_features':object}

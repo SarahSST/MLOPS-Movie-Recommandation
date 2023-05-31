@@ -22,8 +22,8 @@ from sqlalchemy_utils import database_exists, create_database
 # -------------------------------------- #
 
 my_dag = DAG(
-    dag_id='Process_Data_MAN_18',
-    description='Process_Data_MAN',
+    dag_id='Process_Data',
+    description='Process_Data',
     tags=['MovieReco', 'Process'],
     schedule_interval=datetime.timedelta(hours=6),
     default_args={
@@ -98,7 +98,7 @@ def process_title_basics(source_path, destination_path):
 
 
         # Limitation of the data set size
-        df = df[df['startYear']>2000.0]
+        df = df[df['startYear']>2010.0]
         df = df[df['titleType']=='movie']
         df = df[df['isAdult']==0]
 
@@ -240,25 +240,28 @@ def load_mysql_pandas(source_path):
     result = engine.execute(sql)
     print('table dropped')
 
-    # Creation of the table
-    meta = MetaData()
+    # Table creation
+    inspector = inspect(engine)
 
-    table_api = Table(
-    'table_api', meta, 
-    Column('tconst', String(15), primary_key=True), 
-    Column('titleType', String(150)), 
-    Column('primaryTitle', String(150)),
-    Column('startYear', Integer),
-    Column('endYear', Integer),
-    Column('runtimeMinutes', Integer),
-    Column('genres',  String(150)),
-    Column('runtimeCategory',  String(2)),
-    Column('yearCategory',  String(2)),
-    Column('combined_features',  String(255))
-    ) 
+    if not 'table_api' in inspector.get_table_names():
+        meta = MetaData()
 
-    meta.create_all(engine)
-    print('table created')
+        table_api = Table(
+        'table_api', meta, 
+        Column('tconst', String(15), primary_key=True), 
+        Column('titleType', String(150)), 
+        Column('primaryTitle', String(150)),
+        Column('startYear', Integer),
+        Column('endYear', Integer),
+        Column('runtimeMinutes', Integer),
+        Column('genres',  String(150)),
+        Column('runtimeCategory',  String(2)),
+        Column('yearCategory',  String(2)),
+        Column('combined_features',  String(255))
+        ) 
+
+        meta.create_all(engine)
+        print('table created')
 
     # Load data from .csv
     column_list = [

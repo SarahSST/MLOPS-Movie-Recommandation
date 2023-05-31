@@ -16,10 +16,10 @@ import requests
 # -------------------------------------- #
 
 my_dag = DAG(
-    dag_id='download_reduce_MAN_01',
-    description='download_reduce_MAN_01',
+    dag_id='download_reduce',
+    description='download_reduce',
     tags=['MovieReco', 'download'],
-    schedule_interval=datetime.timedelta(hours=12),
+    schedule_interval=datetime.timedelta(minutes=30),
     default_args={
         'owner': 'airflow',
         'start_date': days_ago(0, minute=1),
