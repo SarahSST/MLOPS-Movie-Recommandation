@@ -1,14 +1,15 @@
 FROM debian:latest
 
-RUN apt update && apt install -y && /
-    pip
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip
 
 WORKDIR /home
 RUN mkdir streamlit
 RUN cd streamlit
 RUN mkdir asset pages utils
 
-RUN python -m venv .venv
+RUN python3 -m venv .venv
 RUN source .venv/bin/activate
 
 RUN pip install streamlit requests
