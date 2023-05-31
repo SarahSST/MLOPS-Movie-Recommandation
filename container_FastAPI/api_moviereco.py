@@ -29,10 +29,10 @@ mysql_url = 'container_mysql:3306'
 mysql_user = os.environ.get('MYSQL_USER')
 mysql_password = os.environ.get('MYSQL_ROOT_PASSWORD')
 database_name = os.environ.get('MYSQL_DATABASE')
-# table_users = os.environ.get('MYSQL_TABLE_USERS')
-# table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
-table_users = "Users"
-table_movies =  "table_api"
+table_users = os.environ.get('MYSQL_TABLE_USERS')
+table_movies =  os.environ.get('MYSQL_TABLE_MOVIES')
+#table_users = "Users"
+#table_movies =  "table_api"
 
 
 # Creating the URL connection
@@ -91,13 +91,13 @@ class Movie(BaseModel):
     combined_features: str
 
 
-# ---------- API initialisation ---------- #
+# ---------- API INITIALISATION ---------- #
 
 
 api = FastAPI(
     title="Movie recommendation",
     description="Content based Movie recommendation",
-    version="1.5.5",
+    version="1.5.6",
     openapi_tags=[
               {'name':'Info', 'description':'Info'},
               {'name':'MovieReco','description':'Get recommendation'}, 
@@ -109,8 +109,11 @@ api = FastAPI(
 # ---------- SECURITY : ADMIN ---------- #
 
 
-API_KEY = "Admin"
-API_KEY_NAME = "Admin"
+# API_KEY = "Admin"
+# API_KEY_NAME = "Admin"
+API_KEY = os.environ.get('API_KEY')
+API_KEY_NAME = os.environ.get('API_KEY_NAME')
+
 
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
@@ -166,8 +169,8 @@ def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
         )
   
 
-
 # ---------- API Routes ---------- #
+
 
 @api.get('/status', tags=['Info']) 
 async def get_status(): 
@@ -340,7 +343,7 @@ async def get_columns(TableName:str, api_key_header: APIKey = Depends(get_api_ke
     return inspector.get_columns(table_name=TableName)
 
 
-@api.get('/get-users',  name="Return a list of users", response_model=User, tags=['Admin'])
+@api.get('/get-users-alchemy',  name="Return a list of users", response_model=User, tags=['Admin'])
 async def get_users(api_key_header: APIKey = Depends(get_api_key)):
     """ 
     Return the list of users
@@ -362,7 +365,7 @@ async def get_users(api_key_header: APIKey = Depends(get_api_key)):
     
     return results
 
-@api.get('/get-users_bis',  name="Return a list of users", response_model=User, tags=['Admin'])
+@api.get('/get-users-pandas',  name="Return a list of users", response_model=User, tags=['Admin'])
 async def get_users(api_key_header: APIKey = Depends(get_api_key)):
     """ 
     Return a list of similar movies
