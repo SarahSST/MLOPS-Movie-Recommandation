@@ -132,6 +132,16 @@ services:
       start_period: 40s
     restart: always
 
+  container_stream:
+    image: cedric1234/stream_movie:1.0.0
+    container_name: container_stream
+    depends_on:
+      container_mysql:
+        condition: service_healthy
+    ports:
+      - "8501:8501"
+    restart: on-failure
+
   redis:
     image: redis:latest
     ports:
