@@ -1,7 +1,7 @@
 FROM debian:latest
 
-RUN apt update && apt install -y /
-    apt install pip /
+RUN apt update && apt install -y && /
+    pip
 
 WORKDIR /home
 RUN mkdir streamlit
